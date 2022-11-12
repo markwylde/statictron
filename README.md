@@ -32,7 +32,7 @@ Any `index.css` files will get bundled and saved at the same location in the out
 
 As a result, any none css files will get ignored from the copy.
 
-For a full example, look at the [demo](./demo) or the [api - css gets bundled](./test) test.
+For a full example, look at the [demo](./demo) or the [api - css gets bundled](./test/index.js) test.
 
 ### Via the CLI
 ```
@@ -106,4 +106,4 @@ So in the above `[person.id].ejs` file:
 - the filename will be rendered to `first-person/index.html` and `second-person/index.html`
 - the content `<%= person.name =>` will render 'First Person' and 'Second Person'
 
-For a full example, look at the [demo](./demo) or the [api - file based loop](./test) test.
+For a full example, look at the [demo](./demo) or the [api - file based loop](./test/index.js) test.
