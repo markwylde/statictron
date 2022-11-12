@@ -12,7 +12,7 @@ npm install --save statictron
 3. Change into the demo directory `cd demo`
 4. Run statictron
 ```
-statictron --output=./demo/dist --ignore _paritals/** ./demo/src
+statictron --output=./dist --ignore _paritals/** ./src
 ```
 
 > You can server the outputted `dist` directory using any web server.
