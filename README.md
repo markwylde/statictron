@@ -1,5 +1,5 @@
 # statictron
-Build a static website using ejs.
+Build a static website with built in (optional) ejs and css bundling support.
 
 ## Installation
 ```
@@ -12,10 +12,10 @@ npm install --save statictron
 3. Change into the demo directory `cd demo`
 4. Run statictron
 ```
-statictron --output=./dist --ignore _paritals/** ./src
+statictron --loader ejs --loader css --output=./dist --ignore _paritals/** ./src
 ```
 
-> You can server the outputted `dist` directory using any web server.
+> You can serve the outputted `dist` directory using any web server.
 >
 > Try [servatron](https://github.com/markwylde/servatron) then browse to `http://0.0.0.0:8000`.
 >
@@ -25,28 +25,22 @@ statictron --output=./dist --ignore _paritals/** ./src
 
 ## Usage
 
-### CSS files get bundled
-This is a "magic" warning. I need to add some options to disable this but css files get bundled using [cssbun](https://github.com/markwylde/cssbun).
-
-Any `index.css` files will get bundled and saved at the same location in the output directory.
-
-As a result, any none css files will get ignored from the copy.
-
-For a full example, look at the [demo](./demo) or the [api - css gets bundled](./test/index.js) test.
-
 ### Via the CLI
 ```
 statictron cli - v1.0.0
 
 Example usage:
-  statictron --watch --output=dist --ignore _partials/** --scope abc=123 src
-  statictron -w -o=dist -i _partials/** -s abc=123 src
+  statictron --loader ejs --loader css --watch --output=dist --ignore _partials/** --scope abc=123 src
+  statictron -l ejs -l css -w -o=dist -i _partials/** -s abc=123 src
 
 Options:
   --watch                        watch the source directory for changes and rebuild
   --output (-o) pathName         specify a directory to save the generated files to
   --ignore[] (-i) pattern        a (or list of) glob pattern(s) that should be ignored from source
-  --scope[] var=val              build an object to be passed to all ejs files
+  --scope[] var=val              build an object to be passed to all loaders
+  --loader[] loaderName          specify a built in loader to use
+      ejs                        parse any *.ejs file as ejs templates
+      css                        bundle any index.css files and ignore other css files
   --help                         show this help screen
 ```
 
@@ -58,6 +52,10 @@ import statictron from 'statictron';
 await statictron({
   source: './src',
   output: './dist',
+  loaders: [
+    statictron.loaders.ejs,
+    statictron.loaders.css
+  ],
   scope: {
     exampleVariable: 'test123'
   },
@@ -65,6 +63,65 @@ await statictron({
 });
 ```
 
+## Loaders
+Every time a file is found in the `source` directory, it will get passed through the provided loaders (in order) until one of them returns `true`.
+
+A loader is a pure function that takes two arguments:
+- An object containing:
+  | key         | description                           | example                               |
+  | ----------- | ------------------------------------- | ------------------------------------- |
+  | file        | filename that was found               | index-[someVar].ejs                   |
+  | fullFile    | full path and filename                | /home/example/src/index-[someVar].ejs |
+  | destination | directory the file should end up in   | /home/example/dist                    |
+  | parsedFile  | file with variables parsed from scope | index-test123.ejs                     |
+
+- The options, as passed in originally to `statictron`
+
+Note that the `scope` on the options **will** contain additional variables if a loop was present higher up the chain.
+
+### Example loader code
+A very basic example that replaces any 'hello.template' file's contents with 'hello world' is:
+
+```javascript
+async function helloExampleLoader ({ file, fullFile, destination, parsedFile }, options) {
+  if (file !== 'hello.template') {
+    // we only want to edit `hello.template` files
+    // we return false, to let statictron know we didn't action this file
+    // if no loader actions a file, it will be copied as in to the `output`
+    return false;
+  }
+
+  // get the source file data
+  // however, we won't need it for this example
+  // const result = await fs.readFile(fullFile, 'utf8');
+  const result = 'Hello World';
+
+  const finalPath = path.resolve(
+    destination,
+    parsedFile.replace('.template', '.html')
+  );
+
+  await fs.mkdir(path.dirname(finalPath), { recursive: true });
+  await fs.writeFile(finalPath, result);
+
+  // return true to make sure
+  return true;
+}
+```
+
+Now we have created our example loader, we can pass it into statictron as such:
+
+```javascript
+await statictron({
+  source: './src',
+  output: './dist',
+  loaders: [
+    helloExampleLoader
+  ]
+})
+```
+
+There are two built in loaders, one for `ejs` and one for `css`.
 
 ## Looping file structure
 You can loop through an array on the scope. For example:
@@ -73,6 +130,10 @@ You can loop through an array on the scope. For example:
 await statictron({
   source: './src',
   output: './dist',
+  loaders: [
+    statictron.loaders.ejs,
+    statictron.loaders.css
+  ],
   scope: {
     items: [{
       keyA: 'some-example-1',

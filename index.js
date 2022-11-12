@@ -5,9 +5,8 @@ import cssbun from 'cssbun';
 import jsBeautify from 'js-beautify';
 import objectPath from 'object-path';
 import micromatch from 'micromatch';
-import { globby } from 'globby';
 
-const { html: beautifyHtml } = jsBeautify;
+const { html: beautifyHtml, css: beautifyCss } = jsBeautify;
 
 const loopRegex = /\[.* of .*\]/;
 const variableRegex = /\[(.*?)\]/g;
@@ -78,21 +77,15 @@ async function render (source, destination, options) {
         continue;
       }
 
-      if (file.endsWith('.css')) {
-        continue;
+      let loaderFound = false;
+      for (const loader of options.loaders || []) {
+        const loaderResult = await loader({ file, fullFile, destination, parsedFile }, options);
+        if (loaderResult) {
+          loaderFound = true;
+        }
       }
 
-      if (file.endsWith('.ejs')) {
-        options?.logger?.('rendering', `"${formatPath(options.source, fullFile)}" => "${formatPath(options.source, destination)}"`);
-        const result = await inject(fullFile, options.scope, options);
-        const prettyResult = beautifyHtml(result.replace(/^\s*\n/gm, ''), { no_preserve_newlines: true });
-
-        const finalPath = file.endsWith('index.ejs')
-          ? path.resolve(destination, 'index.html')
-          : path.resolve(destination, parsedFile.slice(0, -4), 'index.html');
-
-        await fs.mkdir(path.dirname(finalPath), { recursive: true });
-        await fs.writeFile(finalPath, prettyResult);
+      if (loaderFound) {
         continue;
       }
 
@@ -102,26 +95,52 @@ async function render (source, destination, options) {
   });
 }
 
-export default async function statictron (options) {
+async function statictron (options) {
   const { source, output } = options;
 
   try {
     await fs.rm(output, { recursive: true });
   } catch (error) {}
 
-  await fs.mkdir(output);
-
-  const files = await globby('**/index.css', { cwd: source });
-
-  await Promise.all(
-    files.map(async file => {
-      const finalDirectory = path.resolve(output, file);
-
-      const css = cssbun(path.resolve(source, file));
-      await fs.mkdir(path.dirname(finalDirectory), { recursive: true });
-      await fs.writeFile(finalDirectory, css);
-    })
-  );
-
   await render(source, output, options);
 }
+
+statictron.loaders = {
+  css: async function cssLoader ({ file, fullFile, destination, parsedFile }, options) {
+    if (file.endsWith('.css')) {
+      if (file !== 'index.css') {
+        return true;
+      }
+
+      options?.logger?.('rendering', 'css', `"${formatPath(options.source, fullFile)}" => "${formatPath(options.source, destination)}"`);
+      const result = await cssbun(fullFile);
+      const prettyResult = beautifyCss(result);
+
+      const finalPath = path.resolve(destination, parsedFile);
+
+      await fs.mkdir(path.dirname(finalPath), { recursive: true });
+      await fs.writeFile(finalPath, prettyResult);
+
+      return true;
+    }
+  },
+
+  ejs: async function ejsLoader ({ file, fullFile, destination, parsedFile }, options) {
+    if (file.endsWith('.ejs')) {
+      options?.logger?.('rendering', 'ejs', `"${formatPath(options.source, fullFile)}" => "${formatPath(options.source, destination)}"`);
+      const result = await inject(fullFile, options.scope, options);
+      const prettyResult = beautifyHtml(result.replace(/^\s*\n/gm, ''), { no_preserve_newlines: true });
+
+      const finalPath = file.endsWith('index.ejs')
+        ? path.resolve(destination, 'index.html')
+        : path.resolve(destination, parsedFile.slice(0, -4), 'index.html');
+
+      await fs.mkdir(path.dirname(finalPath), { recursive: true });
+      await fs.writeFile(finalPath, prettyResult);
+
+      return true;
+    }
+  }
+};
+
+export default statictron;

@@ -14,6 +14,7 @@ const ensureArray = thing => Array.isArray(thing) ? thing : [thing];
 
 const args = {
   watch: argv.w || argv.watch || false,
+  loaders: ensureArray(argv.l || argv.loader || []),
   ignore: ensureArray(argv.i || argv.ignore || []),
   scope: ensureArray(argv.s || argv.scope || [])
     .reduce((scope, expression) => {
@@ -31,14 +32,17 @@ if (args.help || !args.source) {
     `${packageJson.name} cli - v${packageJson.version}`,
     '',
     'Example usage:',
-    '  statictron --watch --output=dist --ignore _partials/** --scope abc=123 src',
-    '  statictron -w -o=dist -i _partials/** -s abc=123 src',
+    '  statictron --loader ejs --loader css --watch --output=dist --ignore _partials/** --scope abc=123 src',
+    '  statictron -l ejs -l css -w -o=dist -i _partials/** -s abc=123 src',
     '',
     'Options:',
     '  --watch                        watch the source directory for changes and rebuild',
     '  --output (-o) pathName         specify a directory to save the generated files to',
     '  --ignore[] (-i) pattern        a (or list of) glob pattern(s) that should be ignored from source',
-    '  --scope[] var=val              build an object to be passed to all ejs files',
+    '  --scope[] var=val              build an object to be passed to all loaders',
+    '  --loader[] loaderName          specify a built in loader to use',
+    '      ejs                        parse any *.ejs file as ejs templates',
+    '      css                        bundle any index.css files and ignore other css files',
     '  --help                         show this help screen'
   ].join('\n'));
   process.exit(0);
@@ -46,6 +50,12 @@ if (args.help || !args.source) {
 
 const render = () => {
   statictron({
+    loaders: args.loaders.map(name => {
+      if (!statictron.loaders[name]) {
+        throw new Error(`could not find loader from the name "${name}"`)
+      }
+      return statictron.loaders[name]
+    }),
     source: args.source,
     output: args.output,
     ignore: args.ignore,
