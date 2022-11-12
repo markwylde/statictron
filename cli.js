@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import { readFile } from 'fs/promises';
 import minimist from 'minimist';
 import chokidar from 'chokidar';

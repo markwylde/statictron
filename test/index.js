@@ -16,7 +16,8 @@ test('api - source and output', async t => {
       '_partials/foot/index.html',
       '_partials/head/index.html',
       '_partials/header/index.html',
-      'index.html'
+      'index.html',
+      'plane.svg'
     ]
   );
 
@@ -37,6 +38,7 @@ test('api - source and output', async t => {
     </header>
     <h1>Home Page</h1>
     <p>This is a test</p>
+    <img src="plane.svg" />
 </body>
 
 </html>
@@ -59,7 +61,8 @@ test('api - scope', async t => {
       '_partials/foot/index.html',
       '_partials/head/index.html',
       '_partials/header/index.html',
-      'index.html'
+      'index.html',
+      'plane.svg'
     ]
   );
 
@@ -80,6 +83,7 @@ test('api - scope', async t => {
     </header>
     <h1>Test Title From Scope</h1>
     <p>This is a test</p>
+    <img src="plane.svg" />
 </body>
 
 </html>
@@ -96,7 +100,7 @@ test('api - ignore as a string', async t => {
   const files = await globby('**/*', { cwd: './demo/dist' });
   t.deepEqual(
     files.sort(),
-    ['index.html']
+    ['index.html', 'plane.svg']
   );
 });
 
@@ -110,7 +114,7 @@ test('api - ignore as an array', async t => {
   const files = await globby('**/*', { cwd: './demo/dist' });
   t.deepEqual(
     files.sort(),
-    ['index.html']
+    ['index.html', 'plane.svg']
   );
 });
 
@@ -127,7 +131,7 @@ test('api - multiple ignore', async t => {
   const files = await globby('**/*', { cwd: './demo/dist' });
   t.deepEqual(
     files.sort(),
-    ['_partials/header/index.html', 'index.html']
+    ['_partials/header/index.html', 'index.html', 'plane.svg']
   );
 });
 
@@ -155,6 +159,7 @@ test('api - file based loop', async t => {
     [
       'first/index.html',
       'index.html',
+      'plane.svg',
       'second/index.html',
     ]
   );

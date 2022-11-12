@@ -78,8 +78,8 @@ async function render (source, destination, options) {
         continue;
       }
 
-      options?.logger?.('rendering', `"${formatPath(options.source, fullFile)}" => "${formatPath(options.source, destination)}"`);
       if (file.endsWith('.ejs')) {
+        options?.logger?.('rendering', `"${formatPath(options.source, fullFile)}" => "${formatPath(options.source, destination)}"`);
         const result = await inject(fullFile, options.scope, options);
         const prettyResult = beautifyHtml(result.replace(/^\s*\n/gm, ''), { no_preserve_newlines: true });
 
@@ -89,7 +89,10 @@ async function render (source, destination, options) {
 
         await fs.mkdir(path.dirname(finalPath), { recursive: true });
         await fs.writeFile(finalPath, prettyResult);
+        continue;
       }
+
+      await fs.cp(fullFile, path.resolve(destination, parsedFile), { recursive: true, force: true });
     }
     resolve();
   });

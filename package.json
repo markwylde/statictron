@@ -27,9 +27,9 @@
     "debounce": "^1.2.1",
     "ejs": "^3.1.8",
     "globby": "^13.1.2",
-    "js-beautify": "^1.14.6",
+    "js-beautify": "^1.14.7",
     "micromatch": "^4.0.5",
-    "minimist": "^1.2.6",
+    "minimist": "^1.2.7",
     "object-path": "^0.11.8"
   },
   "repository": {
