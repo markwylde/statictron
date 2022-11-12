@@ -1,0 +1,38 @@
+{
+  "name": "statictron",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Build a static website using ejs.",
+  "bin": {
+    "statictron": "cli.js"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Mark Wylde",
+    "email": "me@markwylde.com",
+    "url": "https://github.com/markwylde"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "cssbun": "^1.2.0",
+    "debounce": "^1.2.1",
+    "ejs": "^3.1.8",
+    "js-beautify": "^1.14.6",
+    "micromatch": "^4.0.5",
+    "minimist": "^1.2.6",
+    "object-path": "^0.11.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markwylde/statictron.git"
+  },
+  "bugs": {
+    "url": "https://github.com/markwylde/statictron/issues"
+  },
+  "homepage": "https://github.com/markwylde/statictron#readme"
+}
