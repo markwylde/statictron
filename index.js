@@ -1,11 +1,11 @@
 import { promises as fs } from 'fs';
-import glob from 'glob';
 import path from 'path';
 import ejs from 'ejs';
 import cssbun from 'cssbun';
 import jsBeautify from 'js-beautify';
 import objectPath from 'object-path';
 import micromatch from 'micromatch';
+import { globby } from 'globby';
 
 const { html: beautifyHtml } = jsBeautify;
 
@@ -29,19 +29,20 @@ async function inject (file, scope, options) {
   });
 }
 
-function render (source, destination, options) {
+async function render (source, destination, options) {
   options?.logger?.('exploring', `"${formatPath(options.source, source)}" => "${formatPath(options.source, destination)}"`);
 
-  return new Promise(async resolve => {
-    const files = await fs.readdir(source);
+  const files = await fs.readdir(source);
 
+  return new Promise(async resolve => {
     for (const file of files) {
       const fullFile = path.resolve(source, file);
+      const relativeFile = path.relative(options.source, fullFile);
       const stats = await fs.stat(fullFile);
       const isDirectory = stats.isDirectory();
       const isLoop = !!file.match(loopRegex);
       const isVariable = !!file.match(variableRegex);
-      const shouldIgnore = micromatch.isMatch(fullFile, options.ignore, {
+      const shouldIgnore = micromatch.isMatch(relativeFile, options.ignore || [], {
         cwd: path.resolve(options.source),
         basename: true
       });
@@ -100,17 +101,16 @@ export default async function statictron (options) {
 
   await fs.mkdir(output);
 
-  glob('**/index.css', { cwd: source }, (error, files) => {
-    if (error) {
-      throw error;
-    }
-    files.forEach(async file => {
+  const files = await globby('**/index.css', { cwd: source });
+
+  await Promise.all(
+    files.map(async file => {
       const finalDirectory = path.resolve(output, file);
       const css = cssbun(path.resolve(source, file));
       await fs.mkdir(path.dirname(finalDirectory), { recursive: true });
       await fs.writeFile(finalDirectory, css);
-    });
-  });
+    })
+  );
 
   await render(source, output, options);
 }

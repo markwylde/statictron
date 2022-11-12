@@ -15,7 +15,9 @@ npm install --save statictron
 statictron --output=./demo/dist --ignore _paritals/** ./demo/src
 ```
 
-> You can server the outputted `dist` directory using any web server. Try [servatron](https://github.com/markwylde/servatron) then browse to `http://0.0.0.0:8000`.
+> You can server the outputted `dist` directory using any web server.
+>
+> Try [servatron](https://github.com/markwylde/servatron) then browse to `http://0.0.0.0:8000`.
 >
 > ```
 > servatron --port 8000 --directory dist
