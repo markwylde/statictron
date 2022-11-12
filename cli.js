@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { readFile } from 'fs/promises';
 import minimist from 'minimist';
 import chokidar from 'chokidar';
 import debounce from 'debounce';
 import statictron from './index.js';
-import { readFile } from 'fs/promises';
 
 const packageJson = JSON.parse(await readFile(new URL('./package.json', import.meta.url)));
 

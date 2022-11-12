@@ -10,7 +10,9 @@
   "scripts": {
     "test": "node test"
   },
-  "keywords": [],
+  "keywords": [
+    "static", "static-site-generator", "content"
+  ],
   "author": {
     "name": "Mark Wylde",
     "email": "me@markwylde.com",
