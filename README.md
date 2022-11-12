@@ -10,10 +10,16 @@ npm install --save statictron
 1. Clone this repo `git clone https://github.com/markwylde/statictron.git`
 2. Install statictron globally `npm install --global statictron`
 3. Change into the demo directory `cd demo`
-4. Run statictron:
+4. Run statictron
 ```
 statictron --output=./demo/dist --ignore _paritals/** ./demo/src
 ```
+
+> You can server the outputted `dist` directory using any web server. Try [servatron](https://github.com/markwylde/servatron) then browse to `http://0.0.0.0:8000`.
+>
+> ```
+> servatron --port 8000 --directory dist
+> ```
 
 ## Usage
 
