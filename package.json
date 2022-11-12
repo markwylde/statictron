@@ -1,6 +1,6 @@
 {
   "name": "statictron",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Build a static website using ejs.",
   "bin": {
@@ -11,7 +11,9 @@
     "test": "node test"
   },
   "keywords": [
-    "static", "static-site-generator", "content"
+    "static",
+    "static-site-generator",
+    "content"
   ],
   "author": {
     "name": "Mark Wylde",
