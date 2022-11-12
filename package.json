@@ -1,6 +1,6 @@
 {
   "name": "statictron",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Build a static website using ejs.",
   "bin": {
