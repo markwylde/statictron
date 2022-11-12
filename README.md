@@ -25,6 +25,15 @@ statictron --output=./dist --ignore _paritals/** ./src
 
 ## Usage
 
+### CSS files get bundled
+This is a "magic" warning. I need to add some options to disable this but css files get bundled using [cssbun](https://github.com/markwylde/cssbun).
+
+Any `index.css` files will get bundled and saved at the same location in the output directory.
+
+As a result, any none css files will get ignored from the copy.
+
+For a full example, look at the [demo](./demo) or the [api - css gets bundled](./test) test.
+
 ### Via the CLI
 ```
 statictron cli - v1.0.0
