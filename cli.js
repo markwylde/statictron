@@ -48,6 +48,7 @@ const render = () => {
     source: args.source,
     output: args.output,
     ignore: args.ignore,
+    scope: args.scope,
     logger: console.log
   });
 }
