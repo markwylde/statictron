@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "chokidar": "^3.5.3",
-    "cssbun": "^1.2.0",
+    "cssbun": "^1.2.1",
     "debounce": "^1.2.1",
     "ejs": "^3.1.8",
     "globby": "^13.1.2",

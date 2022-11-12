@@ -78,6 +78,10 @@ async function render (source, destination, options) {
         continue;
       }
 
+      if (file.endsWith('.css')) {
+        continue;
+      }
+
       if (file.endsWith('.ejs')) {
         options?.logger?.('rendering', `"${formatPath(options.source, fullFile)}" => "${formatPath(options.source, destination)}"`);
         const result = await inject(fullFile, options.scope, options);
@@ -112,6 +116,7 @@ export default async function statictron (options) {
   await Promise.all(
     files.map(async file => {
       const finalDirectory = path.resolve(output, file);
+
       const css = cssbun(path.resolve(source, file));
       await fs.mkdir(path.dirname(finalDirectory), { recursive: true });
       await fs.writeFile(finalDirectory, css);
