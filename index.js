@@ -54,6 +54,9 @@ async function render (source, destination, options) {
       if (isLoop) {
         const [left, right] = file.slice(1, -1).split(' of ');
         const gotted = objectPath.get(options.scope, right);
+        if (!gotted) {
+          continue;
+        }
         for (const item of gotted) {
           await render(fullFile, destination, {
             ...options,

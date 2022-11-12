@@ -55,3 +55,46 @@ await statictron({
   logger: console.log // default is undefined which means no logging
 });
 ```
+
+
+## Looping file structure
+You can loop through an array on the scope. For example:
+
+```javascript
+await statictron({
+  source: './src',
+  output: './dist',
+  scope: {
+    items: [{
+      keyA: 'some-example-1',
+      keyB: 'some-example-2'
+    }],
+    people: [{
+      id: 'first-person',
+      name: 'First Person'
+    }, {
+      id: 'second-person',
+      name: 'Second Person'
+    }]
+  },
+  logger: console.log // default is undefined which means no logging
+});
+```
+
+**Example file structure**
+```
+[item of items]
+  [item.keyA].ejs
+  [item.keyB].ejs
+
+[person of people]
+  [person.id].ejs
+```
+
+The left part of the folder structure would will be use as the key, passed into the scope.
+
+So in the above `[person.id].ejs` file:
+- the filename will be rendered to `first-person/index.html` and `second-person/index.html`
+- the content `<%= person.name =>` will render 'First Person' and 'Second Person'
+
+For a full example, look at the [demo](./demo) or the [api - file based loop](./test) test.

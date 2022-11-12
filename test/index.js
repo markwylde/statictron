@@ -130,3 +130,35 @@ test('api - multiple ignore', async t => {
     ['_partials/header/index.html', 'index.html']
   );
 });
+
+test('api - file based loop', async t => {
+  await statictron({
+    source: './demo/src',
+    output: './demo/dist',
+    scope: {
+      items: [{
+        name: 'first',
+        title: 'Number One'
+      }, {
+        name: 'second',
+        title: 'Number Two'
+      }]
+    },
+    ignore: [
+      '_partials/**'
+    ]
+  });
+
+  const files = await globby('**/*', { cwd: './demo/dist' });
+  t.deepEqual(
+    files.sort(),
+    [
+      'first/index.html',
+      'index.html',
+      'second/index.html',
+    ]
+  );
+
+  t.equal(await fs.readFile('./demo/dist/first/index.html', 'utf8'), `This is item Number One`);
+  t.equal(await fs.readFile('./demo/dist/second/index.html', 'utf8'), `This is item Number Two`);
+});
