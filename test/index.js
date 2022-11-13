@@ -2,24 +2,38 @@ import test from 'basictap';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { globby } from 'globby';
-import statictron from '../index.js';
+import statictron from '../lib/index.js';
 
-async function helloExampleLoader ({ file, destination, parsedFile }) {
-  if (file !== 'index.ejs') {
-    return false;
+async function helloExampleLoader (sourceFile, targetFile) {
+  if (path.basename(sourceFile) !== 'index.ejs') {
+    return;
   }
 
   const result = 'Hello World';
 
-  const finalPath = path.resolve(
-    destination,
-    parsedFile.replace('.template', '.html')
+  const finalPath = path.join(
+    path.dirname(targetFile),
+    path.basename(targetFile).replace('.ejs', '.html')
   );
 
   await fs.mkdir(path.dirname(finalPath), { recursive: true });
   await fs.writeFile(finalPath, result);
 
-  return true;
+  return finalPath;
+}
+
+async function goodbyeReplaceExampleLoader (sourceFile, targetFile) {
+  if (path.basename(sourceFile) !== 'index.html') {
+    return;
+  }
+
+  const data = await fs.readFile(sourceFile, 'utf8');
+  const result = data.replace(/Hello/g, 'Goodbye');
+
+  await fs.mkdir(path.dirname(targetFile), { recursive: true });
+  await fs.writeFile(targetFile, result);
+
+  return targetFile;
 }
 
 test('api - source and output', async t => {
@@ -84,12 +98,36 @@ test('api - example loader', async t => {
   t.deepEqual(
     files.sort(),
     [
-      'index.ejs'
+      'index.html'
     ]
   );
 
-  t.equal(await fs.readFile('./demo/dist/index.ejs', 'utf8'), `
+  t.equal(await fs.readFile('./demo/dist/index.html', 'utf8'), `
 Hello World
+  `.trim());
+});
+
+test('api - loader chain works on file rename', async t => {
+  await statictron({
+    source: './demo/src',
+    output: './demo/dist',
+    ignore: ['_partials/**', '**/*.css', '**/*.svg'],
+    loaders: [
+      helloExampleLoader,
+      goodbyeReplaceExampleLoader
+    ]
+  });
+
+  const files = await globby('**/*', { cwd: './demo/dist' });
+  t.deepEqual(
+    files.sort(),
+    [
+      'index.html'
+    ]
+  );
+
+  t.equal(await fs.readFile('./demo/dist/index.html', 'utf8'), `
+Goodbye World
   `.trim());
 });
 

@@ -4,12 +4,16 @@
   "type": "module",
   "description": "Build a static website using ejs.",
   "bin": {
-    "statictron": "cli.js"
+    "statictron": "bin/cli.js"
   },
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "node test"
+    "test": "c8 node test"
   },
+  "files": [
+    "lib/**/*",
+    "bin/**/*"
+  ],
   "keywords": [
     "static",
     "static-site-generator",
@@ -23,7 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "chokidar": "^3.5.3",
-    "cssbun": "^1.2.1",
+    "cssbun": "^1.2.2",
     "debounce": "^1.2.1",
     "ejs": "^3.1.8",
     "globby": "^13.1.2",
@@ -41,6 +45,7 @@
   },
   "homepage": "https://github.com/markwylde/statictron#readme",
   "devDependencies": {
-    "basictap": "^3.4.3"
+    "basictap": "^3.4.3",
+    "c8": "^7.12.0"
   }
 }

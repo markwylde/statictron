@@ -7,8 +7,8 @@ npm install --save statictron
 ```
 
 ## Demo
-1. Clone this repo `git clone https://github.com/markwylde/statictron.git`
-2. Install statictron globally `npm install --global statictron`
+1. Install statictron globally `npm install --global statictron`
+2. Clone this repo `git clone https://github.com/markwylde/statictron.git`
 3. Change into the demo directory `cd demo`
 4. Run statictron
 ```
@@ -64,18 +64,19 @@ await statictron({
 ```
 
 ## Loaders
-Every time a file is found in the `source` directory, it will get passed through the provided loaders (in order) until one of them returns `true`.
+Every time a file is found in the `source` directory, it will get passed through the provided loaders (in order);
 
-A loader is a pure function that takes two arguments:
-- An object containing:
-  | key         | description                           | example                               |
-  | ----------- | ------------------------------------- | ------------------------------------- |
-  | file        | filename that was found               | index-[someVar].ejs                   |
-  | fullFile    | full path and filename                | /home/example/src/index-[someVar].ejs |
-  | destination | directory the file should end up in   | /home/example/dist                    |
-  | parsedFile  | file with variables parsed from scope | index-test123.ejs                     |
+A loader is a pure function that takes three arguments:
+| key         | description                           | example                                  |
+| ----------- | ------------------------------------- | ---------------------------------------- |
+| sourceFile  | full source file path                 | /home/example/src/index.ejs              |
+| targetFile  | full assumed target file path         | /home/example/dist/index.ejs             |
+| options     | the options you passed to statictron  | { source, output, loaders, scope, logger |
 
-- The options, as passed in originally to `statictron`
+Return:
+  - a string (or array of strings), to rerun all the loaders again on that file.
+  - null to abort the rest of the loaders
+  - undefined to move onto the next loader
 
 Note that the `scope` on the options **will** contain additional variables if a loop was present higher up the chain.
 
@@ -83,12 +84,9 @@ Note that the `scope` on the options **will** contain additional variables if a 
 A very basic example that replaces any 'hello.template' file's contents with 'hello world' is:
 
 ```javascript
-async function helloExampleLoader ({ file, fullFile, destination, parsedFile }, options) {
-  if (file !== 'hello.template') {
-    // we only want to edit `hello.template` files
-    // we return false, to let statictron know we didn't action this file
-    // if no loader actions a file, it will be copied as in to the `output`
-    return false;
+async function helloExampleLoader (sourceFile, targetFile, options) {
+  if (path.basename(file) !== 'hello.template') {
+    return
   }
 
   // get the source file data
@@ -96,16 +94,13 @@ async function helloExampleLoader ({ file, fullFile, destination, parsedFile }, 
   // const result = await fs.readFile(fullFile, 'utf8');
   const result = 'Hello World';
 
-  const finalPath = path.resolve(
-    destination,
-    parsedFile.replace('.template', '.html')
-  );
+  const finalTarget = targetFile.replace('.template', '.html');
 
-  await fs.mkdir(path.dirname(finalPath), { recursive: true });
-  await fs.writeFile(finalPath, result);
+  await fs.mkdir(path.dirname(finalTarget), { recursive: true });
+  await fs.writeFile(finalTarget, result);
 
-  // return true to make sure
-  return true;
+  // returning a file path will rerun all the loaders on that path
+  return finalTarget;
 }
 ```
 
@@ -161,7 +156,7 @@ await statictron({
   [person.id].ejs
 ```
 
-The left part of the folder structure would will be use as the key, passed into the scope.
+The left part of the folder structure would will be used as the key, passed into the scope.
 
 So in the above `[person.id].ejs` file:
 - the filename will be rendered to `first-person/index.html` and `second-person/index.html`

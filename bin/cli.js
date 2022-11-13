@@ -4,9 +4,9 @@ import { readFile } from 'fs/promises';
 import minimist from 'minimist';
 import chokidar from 'chokidar';
 import debounce from 'debounce';
-import statictron from './index.js';
+import statictron from '../lib/index.js';
 
-const packageJson = JSON.parse(await readFile(new URL('./package.json', import.meta.url)));
+const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
 
 const argv = minimist(process.argv.slice(2));
 
@@ -24,6 +24,7 @@ const args = {
     }, {}),
   source: argv._[0],
   output: argv.o || argv.output,
+  clean: argv.clean === false ? false : true,
   help: argv.help
 };
 
@@ -38,6 +39,7 @@ if (args.help || !args.source) {
     'Options:',
     '  --watch                        watch the source directory for changes and rebuild',
     '  --output (-o) pathName         specify a directory to save the generated files to',
+    '  --no-clean                     keep existing files in output directory',
     '  --ignore[] (-i) pattern        a (or list of) glob pattern(s) that should be ignored from source',
     '  --scope[] var=val              build an object to be passed to all loaders',
     '  --loader[] loaderName          specify a built in loader to use',
@@ -58,6 +60,7 @@ const render = () => {
     }),
     source: args.source,
     output: args.output,
+    cleanOutputDirectory: args.cleanOutputDirectory,
     ignore: args.ignore,
     scope: args.scope,
     logger: console.log
