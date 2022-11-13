@@ -29,24 +29,24 @@ const args = {
 };
 
 if (args.help || !args.source) {
-  console.log([
-    `${packageJson.name} cli - v${packageJson.version}`,
-    '',
-    'Example usage:',
-    '  statictron --loader ejs --loader css --watch --output=dist --ignore _partials/** --scope abc=123 src',
-    '  statictron -l ejs -l css -w -o=dist -i _partials/** -s abc=123 src',
-    '',
-    'Options:',
-    '  --watch                        watch the source directory for changes and rebuild',
-    '  --output (-o) pathName         specify a directory to save the generated files to',
-    '  --no-clean                     keep existing files in output directory',
-    '  --ignore[] (-i) pattern        a (or list of) glob pattern(s) that should be ignored from source',
-    '  --scope[] var=val              build an object to be passed to all loaders',
-    '  --loader[] loaderName          specify a built in loader to use',
-    '      ejs                        parse any *.ejs file as ejs templates',
-    '      css                        bundle any index.css files and ignore other css files',
-    '  --help                         show this help screen'
-  ].join('\n'));
+  console.log(`
+${packageJson.name} cli - v${packageJson.version}
+
+Example usage:
+  statictron --loader ejs --loader css --watch --output=dist --ignore _partials/** --scope abc=123 src
+  statictron -l ejs -l css -w -o=dist -i _partials/** -s abc=123 src
+
+Options:
+  --watch                        watch the source directory for changes and rebuild
+  --output (-o) pathName         specify a directory to save the generated files to
+  --no-clean                     keep existing files in output directory
+  --ignore[] (-i) pattern        a (or list of) glob pattern(s) that should be ignored from source
+  --scope[] var=val              build an object to be passed to all loaders
+  --loader[] loaderName          specify a built in loader to use
+      ejs                        parse any *.ejs file as ejs templates
+      css                        bundle any index.css files and ignore other css files
+  --help                         show this help screen
+`.trim());
   process.exit(0);
 }
 

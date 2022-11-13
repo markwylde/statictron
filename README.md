@@ -27,7 +27,7 @@ statictron --loader ejs --loader css --output=./dist --ignore _paritals/** ./src
 
 ### Via the CLI
 ```
-statictron cli - v1.0.0
+statictron cli - v3.0.2
 
 Example usage:
   statictron --loader ejs --loader css --watch --output=dist --ignore _partials/** --scope abc=123 src
@@ -36,6 +36,7 @@ Example usage:
 Options:
   --watch                        watch the source directory for changes and rebuild
   --output (-o) pathName         specify a directory to save the generated files to
+  --no-clean                     keep existing files in output directory
   --ignore[] (-i) pattern        a (or list of) glob pattern(s) that should be ignored from source
   --scope[] var=val              build an object to be passed to all loaders
   --loader[] loaderName          specify a built in loader to use
