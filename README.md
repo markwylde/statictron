@@ -67,11 +67,11 @@ await statictron({
 Every time a file is found in the `source` directory, it will get passed through the provided loaders (in order);
 
 A loader is a pure function that takes three arguments:
-| key         | description                           | example                                  |
-| ----------- | ------------------------------------- | ---------------------------------------- |
-| sourceFile  | full source file path                 | /home/example/src/index.ejs              |
-| targetFile  | full assumed target file path         | /home/example/dist/index.ejs             |
-| options     | the options you passed to statictron  | { source, output, loaders, scope, logger |
+| key         | description                           | example                                    |
+| ----------- | ------------------------------------- | ------------------------------------------ |
+| sourceFile  | full source file path                 | /home/example/src/index.ejs                |
+| targetFile  | full assumed target file path         | /home/example/dist/index.ejs               |
+| options     | the options you passed to statictron  | { source, output, loaders, scope, logger } |
 
 Return:
   - a string (or array of strings), to rerun all the loaders again on that file.
