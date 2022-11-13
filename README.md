@@ -27,7 +27,7 @@ statictron --loader ejs --loader css --output=./dist --ignore _paritals/** ./src
 
 ### Via the CLI
 ```
-statictron cli - v3.0.2
+statictron cli - v3.0.3
 
 Example usage:
   statictron --loader ejs --loader css --watch --output=dist --ignore _partials/** --scope abc=123 src
@@ -86,21 +86,24 @@ A very basic example that replaces any 'hello.template' file's contents with 'he
 
 ```javascript
 async function helloExampleLoader (sourceFile, targetFile, options) {
+  // skip any files that aren't `hello.template`
   if (path.basename(file) !== 'hello.template') {
     return
   }
 
   // get the source file data
   // however, we won't need it for this example
-  // const result = await fs.readFile(fullFile, 'utf8');
+  // const result = await fs.readFile(sourceFile, 'utf8');
   const result = 'Hello World';
 
+  // rename the file from `hello.template` to `hello.html`
   const finalTarget = targetFile.replace('.template', '.html');
 
+  // save the new file to the new output target
   await fs.mkdir(path.dirname(finalTarget), { recursive: true });
   await fs.writeFile(finalTarget, result);
 
-  // returning a file path will rerun all the loaders on that path
+  // rerun all the loaders again on our new target file
   return finalTarget;
 }
 ```
