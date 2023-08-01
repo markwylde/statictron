@@ -27,13 +27,13 @@
   "license": "MIT",
   "dependencies": {
     "chokidar": "^3.5.3",
-    "cssbun": "^1.2.2",
+    "cssbun": "^1.2.4",
     "debounce": "^1.2.1",
-    "ejs": "^3.1.8",
-    "globby": "^13.1.2",
-    "js-beautify": "^1.14.7",
+    "ejs": "^3.1.9",
+    "globby": "^13.2.2",
+    "js-beautify": "^1.14.9",
     "micromatch": "^4.0.5",
-    "minimist": "^1.2.7",
+    "minimist": "^1.2.8",
     "object-path": "^0.11.8"
   },
   "repository": {
@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/markwylde/statictron#readme",
   "devDependencies": {
-    "basictap": "^3.4.3",
-    "c8": "^7.12.0"
+    "basictap": "^4.3.5",
+    "c8": "^8.0.1"
   }
 }
