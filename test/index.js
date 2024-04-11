@@ -53,9 +53,9 @@ test('api - source and output', async t => {
       '_partials/foot/index.html',
       '_partials/head/index.html',
       '_partials/header/index.html',
-      'index.css',
+      'index-bfb298cd.css',
       'index.html',
-      'plane.svg'
+      'plane-4dc849bc.svg'
     ]
   );
 
@@ -68,7 +68,7 @@ test('api - source and output', async t => {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example Site</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="./index-bfb298cd.css">
 </head>
 
 <body>
@@ -77,7 +77,7 @@ test('api - source and output', async t => {
     </header>
     <h1>Home Page</h1>
     <p>This is a test</p>
-    <img src="plane.svg" />
+    <img src="./plane-4dc849bc.svg" />
 </body>
 
 </html>
@@ -148,13 +148,13 @@ test('api - css gets bundled', async t => {
       '_partials/foot/index.html',
       '_partials/head/index.html',
       '_partials/header/index.html',
-      'index.css',
+      'index-bfb298cd.css',
       'index.html',
-      'plane.svg'
+      'plane-4dc849bc.svg'
     ]
   );
 
-  t.equal(await fs.readFile('./demo/dist/index.css', 'utf8'), `
+  t.equal(await fs.readFile('./demo/dist/index-bfb298cd.css', 'utf8'), `
 header {
     background-color: black;
     color: white;
@@ -182,9 +182,9 @@ test('api - scope', async t => {
       '_partials/foot/index.html',
       '_partials/head/index.html',
       '_partials/header/index.html',
-      'index.css',
+      'index-bfb298cd.css',
       'index.html',
-      'plane.svg'
+      'plane-4dc849bc.svg'
     ]
   );
 
@@ -197,7 +197,7 @@ test('api - scope', async t => {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example Site</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="./index-bfb298cd.css">
 </head>
 
 <body>
@@ -206,7 +206,7 @@ test('api - scope', async t => {
     </header>
     <h1>Test Title From Scope</h1>
     <p>This is a test</p>
-    <img src="plane.svg" />
+    <img src="./plane-4dc849bc.svg" />
 </body>
 
 </html>
@@ -227,7 +227,7 @@ test('api - ignore as a string', async t => {
   const files = await globby('**/*', { cwd: './demo/dist' });
   t.deepEqual(
     files.sort(),
-    ['index.css', 'index.html', 'plane.svg']
+    ['index-bfb298cd.css', 'index.html', 'plane-4dc849bc.svg']
   );
 });
 
@@ -245,7 +245,7 @@ test('api - ignore as an array', async t => {
   const files = await globby('**/*', { cwd: './demo/dist' });
   t.deepEqual(
     files.sort(),
-    ['index.css', 'index.html', 'plane.svg']
+    ['index-bfb298cd.css', 'index.html', 'plane-4dc849bc.svg']
   );
 });
 
@@ -266,7 +266,7 @@ test('api - multiple ignore', async t => {
   const files = await globby('**/*', { cwd: './demo/dist' });
   t.deepEqual(
     files.sort(),
-    ['_partials/header/index.html', 'index.css', 'index.html', 'plane.svg']
+    ['_partials/header/index.html', 'index-bfb298cd.css', 'index.html', 'plane-4dc849bc.svg']
   );
 });
 
@@ -297,9 +297,9 @@ test('api - file based loop', async t => {
     files.sort(),
     [
       'first/index.html',
-      'index.css',
+      'index-bfb298cd.css',
       'index.html',
-      'plane.svg',
+      'plane-4dc849bc.svg',
       'second/index.html'
     ]
   );
