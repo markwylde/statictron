@@ -68,7 +68,7 @@ test('api - source and output', async t => {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example Site</title>
-    <link rel="stylesheet" href="./index-bfb298cd.css">
+    <link rel="stylesheet" href="/index-bfb298cd.css">
 </head>
 
 <body>
@@ -77,7 +77,7 @@ test('api - source and output', async t => {
     </header>
     <h1>Home Page</h1>
     <p>This is a test</p>
-    <img src="./plane-4dc849bc.svg" />
+    <img src="/plane-4dc849bc.svg" />
 </body>
 
 </html>
@@ -197,7 +197,7 @@ test('api - scope', async t => {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example Site</title>
-    <link rel="stylesheet" href="./index-bfb298cd.css">
+    <link rel="stylesheet" href="/index-bfb298cd.css">
 </head>
 
 <body>
@@ -206,7 +206,7 @@ test('api - scope', async t => {
     </header>
     <h1>Test Title From Scope</h1>
     <p>This is a test</p>
-    <img src="./plane-4dc849bc.svg" />
+    <img src="/plane-4dc849bc.svg" />
 </body>
 
 </html>
